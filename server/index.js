@@ -8,6 +8,13 @@ var corsOptions = {
     origin: "http://localhost:8081"
 };
 
+
+//mongoose connection
+mongoose.connect('mongodb+srv://UserName:<password>@cluster0-8vkls.mongodb.net/test?retryWrites=true&w=majority', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
