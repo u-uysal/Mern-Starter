@@ -13,7 +13,13 @@ var corsOptions = {
 mongoose.connect('mongodb+srv://UserName:<password>@cluster0-8vkls.mongodb.net/test?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true
-});
+})
+.then(() => {
+  console.log(‘MongoDB Connected…’)
+})
+.catch(err => console.log(err))
+
+
 
 app.use(cors(corsOptions));
 
