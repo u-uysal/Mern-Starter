@@ -1,45 +1,29 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
 
-//hide your key
-const dotenv = require("dotenv")
-dotenv.config()
+require('dotenv').config();
 
 const app = express();
+const port = process.env.PORT || 5000;
 
-var corsOptions = {
-  origin: "http://localhost:8081"
-};
+app.use(cors());
+app.use(express.json());
 
-
-//mongoose connection
-mongoose.connect(process.env.CONNECTDB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
+const uri = process.env.ATLAS_URI;
+mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true }
+);
+const connection = mongoose.connection;
+connection.once('open', () => {
+  console.log("MongoDB database connection established successfully");
 })
-  .then(() => {
-    console.log("MongoDB Connected…")
-  })
-  .catch(err => console.log(err.message))
 
 
+const usersRouter = require('./routes/users');
 
-app.use(cors(corsOptions));
 
-// parse requests of content-type - application/json
-app.use(bodyParser.json());
+app.use('/users', usersRouter);
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
-});
-
-// set port, listen for requests
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+app.listen(port, () => {
+    console.log(`Server is running on port: ${port}`);
 });
